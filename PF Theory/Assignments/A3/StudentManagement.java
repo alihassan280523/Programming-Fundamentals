@@ -8,17 +8,25 @@ public class StudentManagement {
     public static void main(String[] args)throws Exception{
 
         Scanner sc=new Scanner(System.in);
+        int optionSelected;
         
-        String menuInput=JOptionPane.showInputDialog("Enter 1 to insert a new record\n"+
-                                                        "Enter 2 to update record\n");
-
-        int optionSelected=Integer.parseInt(menuInput);
+        do{
+            
+            String menuInput=JOptionPane.showInputDialog("Enter 1 to insert a new record\n"+
+            "Enter 2 to update record\n"+
+            "Enter 3 to delete a record\n"+
+            "Enter 4 to show all student records\n"+
+            "Enter 5 to exit\n"
+        );
+        optionSelected=Integer.parseInt(menuInput);
+        
         switch(optionSelected){
+
             case 1:
                 {   
                     String insertMenuInput=JOptionPane.showInputDialog("Enter 1 to insert at start of the file\n"+
-                                                                        "Enter 2 to insert at a specific position\n "+
-                                                                        "Enter 3 to insert at end");
+                    "Enter 2 to insert at a specific position\n "+
+                    "Enter 3 to insert at end");
                     int option=Integer.parseInt(insertMenuInput);
                     switch(option){
                         case 1:{
@@ -40,14 +48,30 @@ public class StudentManagement {
                     break;
                 }
                 case 2:{
-
+                    
                     String name=JOptionPane.showInputDialog("Enter Student name: ");
                     updateRecord(name);
                     break;
                 }
+                case 3:{
+                    break;
+                }
+                case 4:{
+                    showRecord();
+                    break;
+                }
+                case 5:{
+                    System.exit(0);
+                    break;
+                }
+                default:{
+                    break;
+                }
         }
-        
-    }
+            
+    }while(optionSelected!=5);
+
+}
 
     public static void insertAtStart()throws Exception{
         String studentData="";
@@ -285,6 +309,40 @@ public class StudentManagement {
         fw.close();
     }
 
-    
+    public static void removeRecord(){
+
+        
+    }
+
+    public static void showRecord()throws Exception{
+
+        FileReader fr =new FileReader("StudentData.txt");
+        BufferedReader br=new BufferedReader(fr);
+
+        int i=1;
+
+        String line;
+        String[] arr;
+        String print="";
+
+        while((line=br.readLine())!=null){
+            arr=line.split(",");
+            print+=Integer.toString(i)+". ";
+            i++;
+            for(int j=0;j<3;j++){
+                print+=arr[j]+"     ";
+            }
+
+            print+="\n";
+        }
+
+       
+        JOptionPane.showMessageDialog(null, print);
+
+        br.close();
+        fr.close();
+    }
+
+
     
 }
