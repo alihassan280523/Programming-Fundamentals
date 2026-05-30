@@ -6,8 +6,11 @@ import javax.swing.*;
 public class StudentManagement {
     
     public static void main(String[] args)throws Exception{
+
+        Scanner sc=new Scanner(System.in);
         
-        String menuInput=JOptionPane.showInputDialog("Enter 1 to insert a new record");
+        String menuInput=JOptionPane.showInputDialog("Enter 1 to insert a new record\n"+
+                                                        "Enter 2 to update record\n");
 
         int optionSelected=Integer.parseInt(menuInput);
         switch(optionSelected){
@@ -34,6 +37,12 @@ public class StudentManagement {
                             break;
                         }
                     }
+                    break;
+                }
+                case 2:{
+
+                    String name=JOptionPane.showInputDialog("Enter Student name: ");
+                    updateRecord(name);
                     break;
                 }
         }
@@ -170,5 +179,112 @@ public class StudentManagement {
         bw.close();
         fw.close();
     }
+
+    public static void updateRecord(String name)throws Exception{
+
+        boolean isFound=false;
+        String line;
+
+        FileReader fr=new FileReader("StudentData.txt");
+        BufferedReader br=new BufferedReader(fr);
+        
+        String[] arr={};
+        int count=1;
+        name=name.toUpperCase();
+
+        while(!isFound&&(line=br.readLine())!=null){
+            arr = line.split(",");
+
+            if((arr[0].toUpperCase()).equals(name)){
+                isFound=true;
+                int option=Integer.parseInt(JOptionPane.showInputDialog("What do you want to update:\n"+
+                                                        "1. Name\n"+
+                                                         "2. Age\n"+
+                                                         "3. Phone Number\n"));
+
+                switch(option){
+                    case 1:{
+                        String n=JOptionPane.showInputDialog("Enter updated name: ",arr[0]);
+                        arr[0]=n;
+                        break;
+                    }
+                    case 2:{
+                        String age=JOptionPane.showInputDialog("Enter the updated age: ",arr[1]);
+                        arr[1]=age;
+                        break;
+                    }
+                    case 3:{
+                        String number=JOptionPane.showInputDialog("Enter the updated number: ",arr[2]);
+                        arr[2]=number;
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
+
+            }
+            else{
+                count++;
+            }
+
+            
+            
+        }
+
+        if(!isFound){
+            JOptionPane.showMessageDialog(null,"No Record Found");
+            br.close();
+            fr.close();
+            return;
+        }
+
+        String updatedRecord=arr[0]+","+arr[1]+","+arr[2]+"\n";
+
+        br.close();
+        fr.close();
+
+        fr=new FileReader("StudentData.txt");
+        br=new BufferedReader(fr);
+        
+        FileWriter fw=new FileWriter("StudentDataTemp.txt");
+        BufferedWriter outputData=new BufferedWriter(fw);
+
+        while((line=br.readLine())!=null){
+
+            outputData.write(line+"\n");
+        }
+
+        outputData.close();
+        fw.close();
+        br.close();
+        fr.close();
+
+
+        fr=new FileReader("StudentDataTemp.txt");
+        br=new BufferedReader(fr);
+
+        fw=new FileWriter("StudentData.txt");
+        outputData=new BufferedWriter(fw);
+
+        int i=1;
+
+        while((line=br.readLine())!=null){
+            if(i==count){
+                outputData.write(updatedRecord);
+            }
+            else
+            outputData.write(line+"\n");
+
+            i++;
+        }
+
+        br.close();
+        fr.close();
+        outputData.close();
+        fw.close();
+    }
+
+    
     
 }
