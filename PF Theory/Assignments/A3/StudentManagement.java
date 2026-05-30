@@ -54,6 +54,8 @@ public class StudentManagement {
                     break;
                 }
                 case 3:{
+                    String name=JOptionPane.showInputDialog("Enter student name: ");
+                    removeRecord(name);
                     break;
                 }
                 case 4:{
@@ -297,8 +299,10 @@ public class StudentManagement {
             if(i==count){
                 outputData.write(updatedRecord);
             }
-            else
-            outputData.write(line+"\n");
+            else{
+
+                outputData.write(line+"\n");
+            }
 
             i++;
         }
@@ -309,9 +313,73 @@ public class StudentManagement {
         fw.close();
     }
 
-    public static void removeRecord(){
+    public static void removeRecord(String name)throws Exception{
 
+        FileReader fr=new FileReader("StudentData.txt");
+        BufferedReader br=new BufferedReader(fr);
+
+        boolean isFound=false;
+        int count=1;
+        name=name.toUpperCase();
+        String line;
+        String[] arr;
+
+        while(!isFound&&(line=br.readLine())!=null){
+            arr=line.split(",");
+
+            if((arr[0].toUpperCase()).equals(name)){
+                isFound=true;
+
+            }else{
+                count++;
+            }
+        }
+
+        if(!isFound){
+            JOptionPane.showMessageDialog(null,"Record Not Found");
+            br.close();
+            fr.close();
+            return;
+        }
+
+        br.close();
+        fr.close();
         
+        fr=new FileReader("StudentData.txt");
+        br=new BufferedReader(fr);
+
+        FileWriter fw=new FileWriter("StudentDataTemp.txt");
+        BufferedWriter bw=new BufferedWriter(fw);
+
+        while((line=br.readLine())!=null){
+            bw.write(line+"\n");
+        }
+
+        br.close();
+        fr.close();
+        bw.close();
+        fw.close();
+
+
+        fr=new FileReader("StudentDataTemp.txt");
+        br=new BufferedReader(fr);
+        fw=new FileWriter("StudentData.txt");
+        bw=new BufferedWriter(fw);
+
+        int i=1;
+        while((line=br.readLine())!=null){
+            if(i!=count){
+                bw.write(line+"\n");
+            }
+            i++;
+        }
+
+        br.close();
+        fr.close();
+        bw.close();
+        fw.close();
+
+
     }
 
     public static void showRecord()throws Exception{
